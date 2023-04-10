@@ -6,6 +6,8 @@
     "@d-lab/common-kit": "^0.7.4",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
+    "@imtbl/imx-link-sdk": "^2.0.25",
+    "@imtbl/imx-sdk": "^1.41.3",
     "@mui/icons-material": "^5.11.11",
     "@mui/lab": "^5.0.0-alpha.124",
     "@mui/material": "^5.11.12",
