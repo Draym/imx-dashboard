@@ -31,5 +31,19 @@ export const menu: MenuCategory[] = [
                 children: []
             }
         ]
+    },
+    {
+        id: 200,
+        icon: null,
+        title: null,
+        items: [
+            {
+                id: 201,
+                icon: <AccountBalanceWalletIcon/>,
+                title: "ETH Contracts",
+                target: Path.APP_CONTRACTS,
+                children: []
+            }
+        ]
     }
 ]

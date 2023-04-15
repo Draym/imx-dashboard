@@ -6,6 +6,7 @@ const DefaultPage = React.lazy(() => import("../app/dashboard/default/default.pa
 const CollectionsPage = React.lazy(() => import("../app/dashboard/collections/collections.page"))
 const CollectionPage = React.lazy(() => import("../app/dashboard/collections/collection.page"))
 const ProjectsPage = React.lazy(() => import("../app/dashboard/projects/projects.page"))
+const ContractPage = React.lazy(() => import("../app/dashboard/contracts/contract.page"))
 
 const routes: RoutePath[] = [
     {
@@ -30,6 +31,12 @@ const routes: RoutePath[] = [
         name: 'Collection',
         path: Path.APP_COLLECTIONS_Details,
         component: CollectionPage,
+        restrictedBy: null
+    },
+    {
+        name: 'Contract',
+        path: Path.APP_CONTRACTS,
+        component: ContractPage,
         restrictedBy: null
     }
 ]
