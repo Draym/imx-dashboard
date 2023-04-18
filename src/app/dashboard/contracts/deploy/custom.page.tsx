@@ -1,16 +1,18 @@
-import Dashboard from "../page"
+import Dashboard from "../../page"
 import {useSigner} from "wagmi"
-import {Button, Grid, IconButton, Stack, TextField, Typography} from "@mui/material"
+import {Button, Grid, IconButton, Paper, Stack, TextField, Typography} from "@mui/material"
 import {useState} from "react"
-import {isEmpty, isNull} from "@d-lab/common-kit"
+import {isEmpty, isNotEmpty, isNull} from "@d-lab/common-kit"
 import {ethers} from "ethers"
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
-function CollectionPage() {
+function DeployCustomContractPage() {
     const {data: signer, isError, isLoading} = useSigner()
     const [params, setParams] = useState<string[]>([])
     const [abi, setAbi] = useState("")
     const [bytecode, setBytecode] = useState("")
+    const [contractAddress, setContractAddress] = useState("")
+    const [tx, setTx] = useState("")
 
     const isNotValid = (): boolean => {
         return isEmpty(abi) || isEmpty(bytecode) || isNull(signer)
@@ -18,10 +20,10 @@ function CollectionPage() {
 
     const handleSubmit = async () => {
         const factory = new ethers.ContractFactory(abi, bytecode, signer!)
-        console.log("submit: ", await signer!.getAddress(), params)
         const contract = await factory.deploy(...params)
-        console.log(contract.address);
-        console.log(contract.deployTransaction);
+        setContractAddress(contract.address)
+        setTx(contract.deployTransaction.hash)
+        console.log("transaction: ", contract.deployTransaction)
     }
 
     return <Grid container>
@@ -78,7 +80,7 @@ function CollectionPage() {
         </Grid>
         <Grid container>
             <Grid item xs={6}>
-                <Typography>Contract Byte:</Typography>
+                <Typography>Contract Bytecode:</Typography>
                 <TextField
                     margin="normal"
                     required
@@ -103,8 +105,15 @@ function CollectionPage() {
                 Start Deployment
             </Button>
         </Grid>
+        {isNotEmpty(contractAddress) && <Grid item xs={12}>
+            <Paper elevation={1}>
+                <Typography variant="h6" color="green">Contract deployment successful</Typography>
+                <Typography>Contract Address: {contractAddress}</Typography>
+                <Typography>Transaction Hash: {tx}</Typography>
+            </Paper>
+        </Grid>}
     </Grid>
 }
 
-const page = () => <Dashboard content={<CollectionPage/>}/>
+const page = () => <Dashboard content={<DeployCustomContractPage/>}/>
 export default page
