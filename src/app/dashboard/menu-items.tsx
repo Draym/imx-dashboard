@@ -1,19 +1,38 @@
 import {MenuCategory} from "../../components/dashboard/nav-menu"
 import Path from "../../routes/path.enum"
-import AccountBoxIcon from '@mui/icons-material/AccountBox'
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'
+import StorefrontIcon from '@mui/icons-material/Storefront'
+import RedeemIcon from '@mui/icons-material/Redeem'
+import AccountTreeIcon from '@mui/icons-material/AccountTree'
+import PermMediaIcon from '@mui/icons-material/PermMedia'
+import FilePresentIcon from '@mui/icons-material/FilePresent'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import QueryStatsIcon from '@mui/icons-material/QueryStats'
 
 export const menu: MenuCategory[] = [
     {
         id: 1,
         icon: null,
-        title: null,
+        title: "Management",
         items: [
             {
                 id: 2,
-                icon: <AccountBoxIcon/>,
+                icon: <AccountTreeIcon/>,
                 title: "Projects",
                 target: Path.APP_PROJECTS,
+                children: []
+            },
+            {
+                id: 3,
+                icon: <PermMediaIcon/>,
+                title: "Collections",
+                target: Path.APP_COLLECTIONS,
+                children: []
+            },
+            {
+                id: 4,
+                icon: <FilePresentIcon/>,
+                title: "Metadata",
+                target: null,
                 children: []
             }
         ]
@@ -21,13 +40,27 @@ export const menu: MenuCategory[] = [
     {
         id: 100,
         icon: null,
-        title: null,
+        title: "NFT Operation",
         items: [
             {
                 id: 101,
-                icon: <AccountBalanceWalletIcon/>,
-                title: "Collections",
-                target: Path.APP_COLLECTIONS,
+                icon: <RedeemIcon/>,
+                title: "Airdrop",
+                target: null,
+                children: []
+            },
+            {
+                id: 102,
+                icon: <StorefrontIcon/>,
+                title: "Market",
+                target: null,
+                children: []
+            },
+            {
+                id: 103,
+                icon: <QueryStatsIcon/>,
+                title: "Sales",
+                target: null,
                 children: []
             }
         ]
@@ -35,13 +68,13 @@ export const menu: MenuCategory[] = [
     {
         id: 200,
         icon: null,
-        title: null,
+        title: "SmartContract",
         items: [
             {
                 id: 201,
-                icon: <AccountBalanceWalletIcon/>,
-                title: "ETH Contracts",
-                target: Path.APP_CONTRACTS,
+                icon: <CloudUploadIcon/>,
+                title: "Deployment",
+                target: Path.APP_CONTRACT_DEPLOY,
                 children: []
             }
         ]

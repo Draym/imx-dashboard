@@ -6,7 +6,9 @@ const DefaultPage = React.lazy(() => import("../app/dashboard/default/default.pa
 const CollectionsPage = React.lazy(() => import("../app/dashboard/collections/collections.page"))
 const CollectionPage = React.lazy(() => import("../app/dashboard/collections/collection.page"))
 const ProjectsPage = React.lazy(() => import("../app/dashboard/projects/projects.page"))
-const ContractPage = React.lazy(() => import("../app/dashboard/contracts/contract.page"))
+const DeployContractPage = React.lazy(() => import("../app/dashboard/contracts/deploy/page"))
+const DeployCustomContractPage = React.lazy(() => import("../app/dashboard/contracts/deploy/custom.page"))
+const DeployIMXContractPage = React.lazy(() => import("../app/dashboard/contracts/deploy/imx.page"))
 
 const routes: RoutePath[] = [
     {
@@ -34,9 +36,21 @@ const routes: RoutePath[] = [
         restrictedBy: null
     },
     {
-        name: 'Contract',
-        path: Path.APP_CONTRACTS,
-        component: ContractPage,
+        name: 'Deploy Contract',
+        path: Path.APP_CONTRACT_DEPLOY,
+        component: DeployContractPage,
+        restrictedBy: null
+    },
+    {
+        name: 'Custom Contract',
+        path: Path.APP_CONTRACT_DEPLOY_Custom,
+        component: DeployCustomContractPage,
+        restrictedBy: null
+    },
+    {
+        name: 'IMX Contract',
+        path: Path.APP_CONTRACT_DEPLOY_Imx,
+        component: DeployIMXContractPage,
         restrictedBy: null
     }
 ]
