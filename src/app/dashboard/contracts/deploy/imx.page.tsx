@@ -6,6 +6,7 @@ import {useEffect, useState} from "react"
 import {isEmpty, isNotEmpty, isNotNull, isNull} from "@d-lab/common-kit"
 import {ethers} from "ethers"
 import NFT from "../../../../resources/blockchain/contracts/NFT.json"
+import Network from "../../../../utils/enums/network"
 
 function DeployImxContractPage() {
     const abi = JSON.stringify(NFT.abi)
@@ -22,7 +23,7 @@ function DeployImxContractPage() {
         if (isNotNull(signer)) {
             signer!.getChainId().then(chainId => {
                 console.log("chainId: ", chainId)
-                setImxOwner((chainId === 1 ? process.env.REACT_APP_IMX_OWNER : process.env.REACT_APP_IMX_SANDBOX_OWNER) || "")
+                setImxOwner((chainId === Network.MAINNET ? process.env.REACT_APP_IMX_OWNER : process.env.REACT_APP_IMX_SANDBOX_OWNER) || "")
             })
         }
     }, [signer])
