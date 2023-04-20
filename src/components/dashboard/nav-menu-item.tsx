@@ -1,9 +1,9 @@
 import {Collapse, List, ListItemButton, ListItemIcon, ListItemText, Paper} from "@mui/material"
 import {useState} from "react"
 import {isNotNull} from "@d-lab/common-kit";
-import {useNavigate} from "react-router"
 import {ExpandLess, ExpandMore} from "@mui/icons-material"
 import {MenuItem} from "./nav-menu"
+import {useRouter} from "next/router"
 
 export interface NavMenuItemProps {
     items: MenuItem[]
@@ -11,13 +11,13 @@ export interface NavMenuItemProps {
 
 export default function NavMenuItem(props: NavMenuItemProps) {
     const [open, setOpen] = useState<{ [key: string]: boolean }>({});
-    const navigate = useNavigate()
+    const router = useRouter()
 
     const onClick = (item: MenuItem) => {
         if (item.children.length > 0) {
             setOpen({...open, [item.id]: !open[item.id]})
         } else if (isNotNull(item.target)) {
-            navigate(item.target!)
+            router.push(item.target!)
         }
     }
 

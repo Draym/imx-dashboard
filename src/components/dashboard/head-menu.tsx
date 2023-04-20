@@ -7,9 +7,10 @@ import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import {Button} from "@mui/material"
-import Path from "../../routes/path.enum"
-import {Logo} from "../../resources"
-import {useNavigate} from "react-router"
+import Route from "@/utils/enums/route.enum"
+import {Logo} from "@/resources"
+import {useRouter} from "next/router"
+import Image from 'next/image'
 
 const Search = styled('div')(({theme}) => ({
     position: 'relative',
@@ -62,14 +63,14 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
 //     </Search>
 // </Box>
 export default function HeadMenu() {
-    const navigate = useNavigate()
+    const router = useRouter()
 
     return (
         <Box sx={{flexGrow: 1}}>
             <Toolbar>
                 <Box sx={{width: '228px'}}>
-                    <Button variant="text" onClick={() => navigate(Path.HOME)}>
-                        <img className="w-8 h-auto mr-1" src={Logo} alt="logo"/>
+                    <Button variant="text" onClick={() => router.push(Route.HOME)}>
+                        <Image className="w-8 h-auto mr-1" src={Logo} alt="logo"/>
                         <span className="text-xl">IMX Dashboard</span>
                     </Button>
                 </Box>

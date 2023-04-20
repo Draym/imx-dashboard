@@ -2,7 +2,6 @@ import {Divider, List, Paper, Stack, Typography} from "@mui/material"
 import {ReactElement} from "react"
 import {isNotNull} from "@d-lab/common-kit";
 import NavMenuItem from "./nav-menu-item"
-import "./menu.css"
 
 export interface MenuCategory {
     id: number,
