@@ -41,17 +41,17 @@ export class ImxSdk {
     }
 
     useConnect(): {auth: ImxAuth | null, loading: boolean} {
-        const [auth, setAuth] = useState<ImxAuth | null>(null)
-        const [loading, setLoading] = useState(true)
+        // const [auth, setAuth] = useState<ImxAuth | null>(null)
+        // const [loading, setLoading] = useState(true)
+        //
+        // useEffect(() => {
+        //     this.link.setup({}).then(response => {
+        //         console.log("auth:", response)
+        //         setAuth(response)
+        //         setLoading(false)
+        //     })
+        // }, [])
 
-        useEffect(() => {
-            this.link.setup({}).then(response => {
-                console.log("auth:", response)
-                setAuth(response)
-                setLoading(false)
-            })
-        }, [])
-
-        return {auth, loading}
+        return {auth: null, loading: true}
     }
 }
