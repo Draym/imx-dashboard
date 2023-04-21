@@ -1,6 +1,7 @@
-import {HttpError} from "@d-lab/common-kit"
 import React from "react"
 import {Alert, AlertTitle, Stack} from "@mui/material"
+import {HttpError} from "@/utils/errors/error"
+
 
 export const ErrorHttp = {
     message: (props: { error: HttpError }) => {
