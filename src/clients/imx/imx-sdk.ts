@@ -109,15 +109,16 @@ export function useImxCollections(imx: ImxSdk | null) {
     return {collections: collections, error, loading}
 }
 
-export function useImxProjects(imx: ImxSdk | null, pageSize = 50, cursor = 0) {
+export function useImxProjects(imx: ImxSdk | null, pageSize = 1000, imxCursor?: string) {
     const [projects, setProjects] = useState<Project[]>([])
+    const [cursor, setCursor] = useState<string | undefined>(imxCursor)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<IMXError | undefined>()
 
     useEffect(() => {
         setLoading(true)
         if (isNotNull(imx)) {
-            imx!.getProjects(pageSize, cursor.toString()).then(response => {
+            imx!.getProjects(pageSize, imxCursor).then(response => {
                 setProjects(response.result)
                 setLoading(false)
             }).catch(e => {
@@ -127,7 +128,7 @@ export function useImxProjects(imx: ImxSdk | null, pageSize = 50, cursor = 0) {
             })
         }
     }, [imx, cursor, pageSize])
-    return {projects, error, loading}
+    return {projects, cursor, error, loading}
 }
 
 export class ImxSdk {

@@ -18,7 +18,7 @@ function ProjectsPage(props: ProjectsPageProps) {
     const {projects, loading, error} = useImxProjects(props.context.imx)
     const router = useRouter()
     const [paginationModel, setPaginationModel] = useState({
-        pageSize: 20,
+        pageSize: 50,
         page: 0,
     })
 
