@@ -42,7 +42,6 @@ function NewProjectPage(props: NewProjectProps) {
         <Grid item xs={12}>
             <Typography>Name</Typography>
             <TextField
-                className="mt-5"
                 margin="normal"
                 required
                 id="name"
@@ -55,7 +54,6 @@ function NewProjectPage(props: NewProjectProps) {
         <Grid item xs={12}>
             <Typography>Contact Email</Typography>
             <TextField
-                className="mt-5"
                 margin="normal"
                 required
                 label="email"
@@ -68,7 +66,6 @@ function NewProjectPage(props: NewProjectProps) {
         <Grid item xs={12}>
             <Typography>Company Name</Typography>
             <TextField
-                className="mt-5"
                 margin="normal"
                 required
                 label="name"
@@ -84,7 +81,7 @@ function NewProjectPage(props: NewProjectProps) {
                 disabled={isNotValid() || submit}
             >
                 Create
-                {submit && <CircularProgress color="inherit"/>}
+                {submit && <CircularProgress color="inherit" size={20} sx={{marginLeft: "5px"}}/>}
             </Button>
         </Grid>
     </Grid>
