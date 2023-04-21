@@ -1,9 +1,10 @@
 import {useEffect, useState} from "react"
-import {ImxContext, useIMX, useImxConnect} from "@/clients/imx/imx-sdk"
+import {useIMX, useImxConnect} from "@/clients/imx/imx-sdk"
 import {isNotNull, isNull} from "@d-lab/common-kit"
 import Loading from "@/components/dashboard/loading"
-import {Error} from "@/components/errors/error"
+import {ErrorHttp} from "@/components/error/errors"
 import RequireWallet from "@/components/wallet/require-wallet"
+import {ImxContext} from "@/clients/imx/imx-interfaces"
 
 export interface RequireIMXProps {
     target: (context: ImxContext) => JSX.Element
@@ -19,11 +20,11 @@ function RequireIMX(props: RequireIMXProps): JSX.Element | null {
     if (!isMounted) {
         return null
     } else if (isNotNull(error)) {
-        return <Error.message error={error!}></Error.message>
-    } else if (loading || isNull(address)) {
+        return <ErrorHttp.message error={error!}></ErrorHttp.message>
+    } else if (loading || isNull(address) || isNull(imx)) {
         return <Loading/>
     } else {
-        return props.target({address: address!})
+        return props.target({address: address!, imx: imx!})
     }
 }
 
