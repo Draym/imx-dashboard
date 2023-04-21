@@ -97,7 +97,8 @@ function DeployCustomContractPage() {
         <Grid item xs={12}>
             <Button
                 fullWidth
-                variant="contained"
+                variant="outlined"
+                color="success"
                 onClick={handleSubmit}
                 disabled={isNotValid()}
                 sx={{marginTop: "20px"}}
