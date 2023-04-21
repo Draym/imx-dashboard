@@ -5,12 +5,14 @@ import Network from "@/utils/enums/network.enum"
 import {useSigner} from "wagmi"
 import {isNotNull} from "@d-lab/common-kit"
 
-export interface ImxAuth {
+export interface ImxContext {
     address: string
-    starkPublicKey: string
-    ethNetwork: string
-    providerPreference: string
-    email?: string
+}
+
+export interface ImxConnect {
+    address?: string
+    error?: string
+    loading: boolean
 }
 
 export function useIMX(): ImxSdk | null {
@@ -30,25 +32,30 @@ export function useIMX(): ImxSdk | null {
 }
 
 
-export function useImxConnect(imx: ImxSdk | null): { auth: ImxAuth | null, loading: boolean } {
-    const [auth, setAuth] = useState<ImxAuth | null>(null)
-    const [loading, setLoading] = useState(true)
+export function useImxConnect(imx: ImxSdk | null): ImxConnect {
+    const [address, setAddress] = useState<string | undefined>()
+    const [loading, setLoading] = useState<boolean>(true)
+    const [error, setError] = useState<string | undefined>()
+
     useEffect(() => {
-        console.log("use link", imx?.link)
-        console.log("window: ", window)
-        
-        imx?.sdk.getUser(imx?.address).then(response => {
-            console.log("user: ", response.accounts)
+        setLoading(true)
+        imx?.sdk.getUser(imx?.address).then(_ => {
+            setAddress(imx!.address)
+            setError(undefined)
+            setLoading(false)
         }).catch(e => {
+            setLoading(true)
             imx?.link.setup({}).then(response => {
-                console.log("auth:", response)
-                // @ts-ignore
-                setAuth(response)
+                setAddress(response.address)
+                setError(undefined)
                 setLoading(false)
+            }).catch(e2 => {
+                setLoading(false)
+                setError(e2.message)
             })
         })
     }, [imx])
-    return {auth, loading}
+    return {address, error, loading}
 }
 
 export class ImxSdk {

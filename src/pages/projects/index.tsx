@@ -1,18 +1,14 @@
-import {useIMX, useImxConnect} from "@/clients/imx/imx-sdk"
-import {isNull} from "@d-lab/common-kit"
-import Loading from "@/components/dashboard/loading"
-import RequireWallet from "@/components/wallet/require-wallet"
+import {ImxContext} from "@/clients/imx/imx-sdk"
+import RequireImx from "@/components/wallet/require-imx"
 
-function ProjectsPage() {
-    const imx = useIMX()
-    const {auth, loading} = useImxConnect(imx)
-
-    console.log("imx: ", imx)
-    if (loading || isNull(auth)) {
-        return <Loading/>
-    }
-    return <div>Projects page: welcome {auth!.address}</div>
+export interface ProjectsPageProps {
+    context: ImxContext
 }
 
-const page = () => <RequireWallet><ProjectsPage/></RequireWallet>
+function ProjectsPage(props: ProjectsPageProps) {
+    const {address} = props.context
+    return <div>Projects page: welcome {address}</div>
+}
+
+const page = () => <RequireImx target={(context: ImxContext) => <ProjectsPage context={context}/>}/>
 export default page
