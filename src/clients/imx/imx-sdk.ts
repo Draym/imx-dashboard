@@ -18,6 +18,7 @@ import {Signer} from "@wagmi/core"
 import {extractError} from "@/utils/errors/extract-error"
 import {ImxConnect, ImxSigner, IMXWallet, Mint} from "@/clients/imx/imx-interfaces"
 import {httpError} from "@/utils/errors/error"
+import {ethers} from "ethers"
 
 export function useIMX(): ImxSdk | null {
     const {data: signer} = useSigner()
@@ -150,6 +151,14 @@ export class ImxSdk {
     changeNetwork(network: number) {
         this.url = network === Network.MAINNET ? process.env.NEXT_PUBLIC_IMX_LINK! : process.env.NEXT_PUBLIC_IMX_LINK_SANDBOX!
         this.link = new Link(this.url)
+        const config = network === Network.MAINNET ? Config.PRODUCTION : Config.SANDBOX
+        this.sdk = new ImmutableX(config)
+    }
+
+    async getPublicKey(): Promise<string> {
+        const message = "Please sign this message to load your public key into the DApp."
+        const signature = await this.signer.signMessage(message)
+        return ethers.utils.recoverPublicKey(ethers.utils.toUtf8Bytes(message), signature)
     }
 
     async getProjects(pageSize?: number, cursor?: string, orderBy?: string, direction?: string): Promise<GetProjectsResponse> {
