@@ -31,9 +31,6 @@ function CollectionsPage(props: CollectionsPageProps) {
         {field: 'icon_url', headerName: 'Icon', width: 150},
         {field: 'collection_image_url', headerName: 'Image', width: 150}
     ]
-    if (isNotNull(error)) {
-        return <ErrorHttp.withTitle error={error!}/>
-    }
     return <Grid container>
         <Grid container alignItems="center" sx={{marginBottom: "20px"}}>
             <Grid item>
@@ -55,6 +52,9 @@ function CollectionsPage(props: CollectionsPageProps) {
                 autoHeight
             />
         </Grid>
+        {isNotNull(error) && <Grid item xs={12}>
+            <ErrorHttp.withTitle error={error!}/>
+        </Grid>}
     </Grid>
 }
 
