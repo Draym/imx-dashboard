@@ -22,15 +22,15 @@ export const ErrorHttp = {
 }
 
 export const Error = {
-    message: (props: { error: string }) => {
-        return <Stack alignItems="center">
+    message: (props: { error: string, center?: boolean}) => {
+        return <Stack alignItems={props.center === false ? "" : "center"}>
             <Alert severity="error">
                 {props.error}
             </Alert>
         </Stack>
     },
-    withTitle: (props: { title?: string, error: string }) => {
-        return <Stack alignItems="center">
+    withTitle: (props: { title?: string, error: string, center?: boolean }) => {
+        return <Stack alignItems={props.center === false ? "" : "center"}>
             <Alert severity="error">
                 <AlertTitle>{props.title || "Error"}</AlertTitle>
                 {props.error}
