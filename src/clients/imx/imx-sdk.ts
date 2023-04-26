@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react"
 import {
+    AddMetadataSchemaToCollectionRequest,
     Collection,
     Config, CreateCollectionRequest, CreateProjectRequest,
     CreateProjectResponse,
@@ -8,7 +9,7 @@ import {
     GetProjectsResponse,
     ImmutableX,
     IMXError, ListCollectionsResponse, MintFee, MintTokensResponse, MintUser,
-    Project, UpdateCollectionRequest
+    Project, SuccessResponse, UpdateCollectionRequest
 } from '@imtbl/core-sdk'
 import {Link} from '@imtbl/imx-link-sdk'
 import Network from "@/utils/enums/network.enum"
@@ -197,6 +198,10 @@ export class ImxSdk {
 
     async updateCollection(collectionAddress: string, request: UpdateCollectionRequest): Promise<Collection> {
         return this.sdk.updateCollection(this.signer, collectionAddress, request)
+    }
+
+    async addMetadataSchema(collectionAddress: string, request: AddMetadataSchemaToCollectionRequest): Promise<SuccessResponse> {
+        return this.sdk.addMetadataSchemaToCollection(this.signer, collectionAddress, request)
     }
 
     async mintToken(contractAddress: string, mints: Mint[], fees: MintFee[]): Promise<MintTokensResponse> {
