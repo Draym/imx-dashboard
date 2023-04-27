@@ -5,7 +5,6 @@ import Toolbar from '@mui/material/Toolbar';
 import InputBase from '@mui/material/InputBase';
 import {Button, Grid} from "@mui/material"
 import Route from "@/utils/enums/route.enum"
-import {Logo} from "@/resources"
 import {useRouter} from "next/router"
 import Image from 'next/image'
 import {Web3Button} from "@web3modal/react"
@@ -69,7 +68,7 @@ export default function HeadMenu() {
                 <Grid container direction="row" justifyContent="space-between">
                     <Box sx={{width: '228px'}}>
                         <Button variant="text" onClick={() => router.push(Route.HOME)}>
-                            <Image className="w-8 h-auto mr-1" src={Logo} alt="logo"/>
+                            <Image className="mr-1" src="/logo_min.png" alt="logo" width={25} height={25}/>
                             <span className="text-xl">IMX Dashboard</span>
                         </Button>
                     </Box>
