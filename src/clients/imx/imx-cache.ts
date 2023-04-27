@@ -67,6 +67,21 @@ class ImxCache {
         localStorage.setItem(this.key("collections", network), JSON.stringify(this.collections[network]))
         return this.collections[network][wallet]
     }
+
+    addCollection(wallet: string, network: Network, collection: Collection): Collection[] {
+        this.collections[network][wallet].push(collection)
+        localStorage.setItem(this.key("collections", network), JSON.stringify(this.collections[network]))
+        return this.collections[network][wallet]
+    }
+
+    updateCollection(wallet: string, network: Network, collection: Collection): Collection[] {
+        const index = this.collections[network][wallet].findIndex(it => it.address == collection.address)
+        if (index !== -1) {
+            this.collections[network][wallet][index] = collection
+            localStorage.setItem(this.key("collections", network), JSON.stringify(this.collections[network]))
+        }
+        return this.collections[network][wallet]
+    }
 }
 
 let cache: ImxCache | undefined;

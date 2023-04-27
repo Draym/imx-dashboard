@@ -114,7 +114,7 @@ export function useImxCollections(imx: ImxSdk | null, refresh = 1) {
                 setLoading(false)
             })
         }
-    }, [imx])
+    }, [imx, refresh])
     return {collections: collections, error, loading}
 }
 
@@ -190,7 +190,7 @@ export class ImxSdk {
     }
 
     async createProject(request: CreateProjectRequest): Promise<CreateProjectResponse> {
-        return this.sdk.createProject(this.signer, request)
+        return await this.sdk.createProject(this.signer, request)
     }
 
     async getCollections(useCache = true): Promise<Collection[]> {
@@ -223,11 +223,15 @@ export class ImxSdk {
     }
 
     async createCollection(request: CreateCollectionRequest): Promise<Collection> {
-        return this.sdk.createCollection(this.signer, request)
+        const response = await this.sdk.createCollection(this.signer, request)
+        imxCache().addCollection(this.address, this.network, response)
+        return response
     }
 
     async updateCollection(collectionAddress: string, request: UpdateCollectionRequest): Promise<Collection> {
-        return this.sdk.updateCollection(this.signer, collectionAddress, request)
+        const response = await this.sdk.updateCollection(this.signer, collectionAddress, request)
+        imxCache().updateCollection(this.address, this.network, response)
+        return response
     }
 
     async addMetadataSchema(collectionAddress: string, request: AddMetadataSchemaToCollectionRequest): Promise<SuccessResponse> {
