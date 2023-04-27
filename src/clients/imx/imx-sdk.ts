@@ -2,14 +2,20 @@ import {useEffect, useState} from "react"
 import {
     AddMetadataSchemaToCollectionRequest,
     Collection,
-    Config, CreateCollectionRequest, CreateProjectRequest,
+    Config,
+    CreateCollectionRequest,
+    CreateProjectRequest,
     CreateProjectResponse,
     createStarkSigner,
     generateLegacyStarkPrivateKey,
-    GetProjectsResponse,
     ImmutableX,
-    IMXError, ListCollectionsResponse, MintFee, MintTokensResponse, MintUser,
-    Project, SuccessResponse, UpdateCollectionRequest
+    IMXError,
+    MintFee,
+    MintTokensResponse,
+    MintUser,
+    Project,
+    SuccessResponse,
+    UpdateCollectionRequest
 } from '@imtbl/core-sdk'
 import {Link} from '@imtbl/imx-link-sdk'
 import Network from "@/utils/enums/network.enum"
@@ -20,6 +26,7 @@ import {extractError} from "@/utils/errors/extract-error"
 import {ImxConnect, ImxSigner, IMXWallet, Mint} from "@/clients/imx/imx-interfaces"
 import {httpError} from "@/utils/errors/error"
 import {ethers} from "ethers"
+import imxCache from "@/clients/imx/imx-cache"
 
 export function useIMX(): ImxSdk | null {
     const {data: signer} = useSigner()
@@ -90,7 +97,7 @@ export function useImxSigner(imx: ImxSdk | null): ImxSigner {
     return {signer, error, loading}
 }
 
-export function useImxCollections(imx: ImxSdk | null) {
+export function useImxCollections(imx: ImxSdk | null, refresh = 1) {
     const [collections, setCollections] = useState<Collection[]>([])
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<IMXError | undefined>()
@@ -98,7 +105,7 @@ export function useImxCollections(imx: ImxSdk | null) {
     useEffect(() => {
         setLoading(true)
         if (isNotNull(imx)) {
-            imx!.getCollections().then(response => {
+            imx!.getCollections(refresh == 1).then(response => {
                 setCollections(response)
                 setLoading(false)
             }).catch(e => {
@@ -111,17 +118,16 @@ export function useImxCollections(imx: ImxSdk | null) {
     return {collections: collections, error, loading}
 }
 
-export function useImxProjects(imx: ImxSdk | null, pageSize = 1000, imxCursor?: string) {
+export function useImxProjects(imx: ImxSdk | null, refresh = 1) {
     const [projects, setProjects] = useState<Project[]>([])
-    const [cursor, setCursor] = useState<string | undefined>(imxCursor)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<IMXError | undefined>()
 
     useEffect(() => {
         setLoading(true)
         if (isNotNull(imx)) {
-            imx!.getProjects(pageSize, imxCursor).then(response => {
-                setProjects(response.result)
+            imx!.getProjects(refresh == 1).then(response => {
+                setProjects(response)
                 setLoading(false)
             }).catch(e => {
                 setError(e)
@@ -129,12 +135,13 @@ export function useImxProjects(imx: ImxSdk | null, pageSize = 1000, imxCursor?: 
                 setLoading(false)
             })
         }
-    }, [imx, cursor, pageSize])
-    return {projects, cursor, error, loading}
+    }, [imx, refresh])
+    return {projects, error, loading}
 }
 
 export class ImxSdk {
     address: string
+    network: Network
     url: string
     link: Link
     sdk: ImmutableX
@@ -144,6 +151,7 @@ export class ImxSdk {
         this.signer = signer
         this.address = address
         this.url = network === Network.MAINNET ? process.env.NEXT_PUBLIC_IMX_LINK! : process.env.NEXT_PUBLIC_IMX_LINK_SANDBOX!
+        this.network = network
         this.link = new Link(this.url)
         const config = network === Network.MAINNET ? Config.PRODUCTION : Config.SANDBOX
         this.sdk = new ImmutableX(config)
@@ -162,34 +170,56 @@ export class ImxSdk {
         return ethers.utils.recoverPublicKey(ethers.utils.toUtf8Bytes(message), signature)
     }
 
-    async getProjects(pageSize?: number, cursor?: string, orderBy?: string, direction?: string): Promise<GetProjectsResponse> {
-        return this.sdk.getProjects(this.signer, pageSize, cursor, orderBy, direction)
+    async getProjects(useCache = true): Promise<Project[]> {
+        if (useCache) {
+            const data = imxCache().getProjects(this.address, this.network)
+            if (isNotNull(data)) {
+                return data!
+            }
+        }
+        const projects: Project[] = []
+        let remaining = true
+        let cursor = undefined
+        while (remaining) {
+            let response = await this.sdk.getProjects(this.signer, 1000, cursor)
+            projects.push(...response.result)
+            remaining = response.remaining != 0
+            cursor = response.cursor
+        }
+        return imxCache().setProjects(this.address, this.network, projects)
     }
 
     async createProject(request: CreateProjectRequest): Promise<CreateProjectResponse> {
         return this.sdk.createProject(this.signer, request)
     }
 
-    async getCollections(): Promise<Collection[]> {
-        // useless to get all pages, it's unlikely you get hundreds of project in one account
-        const projects = await this.getProjects(1000)
-        const projectIds = projects.result.map(project => project.id)
+    async getCollections(useCache = true): Promise<Collection[]> {
+        if (useCache) {
+            const data = imxCache().getCollections(this.address, this.network)
+            if (isNotNull(data)) {
+                return data!
+            }
+        }
+        const projects = await this.getProjects()
+        const projectIds = projects.map(project => project.id)
         const collections: Collection[] = []
 
         // scan every collection
         // TODO: should try to find a better way with IMX team
         // TODO: maybe can optimise a bit with orderBy projectId
-        let response = await this.sdk.listCollections({pageSize: 1000})
-        while (response.remaining != 0) {
+        let remaining = true
+        let cursor = undefined
+        while (remaining) {
+            let response = await this.sdk.listCollections({pageSize: 1000, cursor: cursor})
             response.result.forEach(collection => {
                 if (projectIds.includes(collection.project_id)) {
                     collections.push(collection)
                 }
             })
-            response = await this.sdk.listCollections({pageSize: 1000, cursor: response.cursor})
+            remaining = response.remaining != 0
+            cursor = response.cursor
         }
-
-        return collections
+        return imxCache().setCollections(this.address, this.network, collections)
     }
 
     async createCollection(request: CreateCollectionRequest): Promise<Collection> {

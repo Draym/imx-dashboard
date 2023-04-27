@@ -15,13 +15,13 @@ export interface CollectionsPageProps {
 
 function CollectionsPage(props: CollectionsPageProps) {
     const {address} = props.context
-    const {collections, loading, error} = useImxCollections(props.context.imx)
+    const [run, setRefresh] = useState(1)
+    const {collections, loading, error} = useImxCollections(props.context.imx, run)
     const router = useRouter()
-    const [paginationModel, setPaginationModel] = useState({
-        pageSize: 20,
-        page: 0,
-    })
 
+    const refresh = () => {
+        setRefresh(run + 1)
+    }
     const columns: GridColDef[] = [
         {field: 'id', headerName: 'ID', width: 90},
         {field: 'address', headerName: 'Address', width: 90},
@@ -41,12 +41,13 @@ function CollectionsPage(props: CollectionsPageProps) {
                 <Button variant="outlined" onClick={() => router.push(Route.APP_COLLECTIONS_Create)}>New Collection</Button>
             </Grid>
         </Grid>
+        <Grid container direction="row" justifyContent="flex-end">
+            <Button variant="outlined" onClick={refresh} size="small" disabled={loading}>refresh IMX</Button>
+        </Grid>
         <Grid item xs={12}>
             <DataGrid
                 rows={collections}
                 columns={columns}
-                paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
                 disableRowSelectionOnClick
                 loading={loading}
                 autoHeight

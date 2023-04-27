@@ -15,12 +15,13 @@ export interface ProjectsPageProps {
 
 function ProjectsPage(props: ProjectsPageProps) {
     const {address} = props.context
-    const {projects, loading, error} = useImxProjects(props.context.imx)
+    const [run, setRefresh] = useState(1)
+    const {projects, loading, error} = useImxProjects(props.context.imx, run)
     const router = useRouter()
-    const [paginationModel, setPaginationModel] = useState({
-        pageSize: 50,
-        page: 0,
-    })
+
+    const refresh = () => {
+        setRefresh(run + 1)
+    }
 
     const columns: GridColDef[] = [
         {field: 'id', headerName: 'ID', width: 90},
@@ -35,22 +36,24 @@ function ProjectsPage(props: ProjectsPageProps) {
     return <Grid container>
         <Grid container alignItems="center" sx={{marginBottom: "20px"}}>
             <Grid item>
-                <Typography>Projects of {address}:</Typography>
+                <Typography>Your Projects:</Typography>
             </Grid>
             <Grid item flex={1}/>
             <Grid item>
                 <Button variant="outlined" onClick={() => router.push(Route.APP_PROJECTS_Create)}>New Project</Button>
             </Grid>
         </Grid>
+        <Grid container direction="row" justifyContent="flex-end">
+            <Button variant="outlined" onClick={refresh} size="small" disabled={loading}>refresh IMX</Button>
+        </Grid>
         <Grid item xs={12}>
             <DataGrid
                 rows={projects}
                 columns={columns}
-                paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
                 disableRowSelectionOnClick
                 loading={loading}
                 autoHeight
+                pagination={undefined}
             />
         </Grid>
     </Grid>
