@@ -23,7 +23,6 @@ function CollectionsPage(props: CollectionsPageProps) {
         setRefresh(run + 1)
     }
     const columns: GridColDef[] = [
-        {field: 'id', headerName: 'ID', width: 90},
         {field: 'address', headerName: 'Address', width: 90},
         {field: 'name', headerName: 'Name', width: 150},
         {field: 'project_id', headerName: 'Project ID', width: 150},
@@ -46,6 +45,7 @@ function CollectionsPage(props: CollectionsPageProps) {
         </Grid>
         <Grid item xs={12}>
             <DataGrid
+                getRowId={(row) => row.address}
                 rows={collections}
                 columns={columns}
                 disableRowSelectionOnClick
