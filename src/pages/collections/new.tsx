@@ -436,7 +436,6 @@ function NewCollectionPage(props: NewCollectionProps) {
         step4
     ]
 
-
     return <Grid container>
         <Grid item xs={12} sx={{marginBottom: "20px"}}>
             <Stepper activeStep={activeStep}>
@@ -454,7 +453,7 @@ function NewCollectionPage(props: NewCollectionProps) {
             </Stepper>
         </Grid>
         <Grid item xs={12}>
-            {activeStep > steps.length ?
+            {activeStep >= steps.length ?
                 <Stack direction="column">
                     <Typography sx={{mt: 2, mb: 1}}>All steps completed - your collection is created on IMX</Typography>
                     <Typography sx={{mt: 2}}>Name: {name}</Typography>
