@@ -2,15 +2,13 @@ import * as React from 'react';
 import {alpha, styled} from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
 import InputBase from '@mui/material/InputBase';
-import Badge from '@mui/material/Badge';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import {Button} from "@mui/material"
+import {Button, Grid} from "@mui/material"
 import Route from "@/utils/enums/route.enum"
 import {Logo} from "@/resources"
 import {useRouter} from "next/router"
 import Image from 'next/image'
+import {Web3Button} from "@web3modal/react"
 
 const Search = styled('div')(({theme}) => ({
     position: 'relative',
@@ -66,26 +64,17 @@ export default function HeadMenu() {
     const router = useRouter()
 
     return (
-        <Box sx={{flexGrow: 1}}>
-            <Toolbar>
-                <Box sx={{width: '228px'}}>
-                    <Button variant="text" onClick={() => router.push(Route.HOME)}>
-                        <Image className="w-8 h-auto mr-1" src={Logo} alt="logo"/>
-                        <span className="text-xl">IMX Dashboard</span>
-                    </Button>
-                </Box>
-                <Box sx={{flexGrow: "1"}}/>
-                <Box>
-                    <IconButton
-                        size="large"
-                        aria-label="show new notifications"
-                        color="inherit"
-                    >
-                        <Badge badgeContent={0} color="error">
-                            <NotificationsIcon/>
-                        </Badge>
-                    </IconButton>
-                </Box>
+        <Box>
+            <Toolbar sx={{width: "100%"}}>
+                <Grid container direction="row" justifyContent="space-between">
+                    <Box sx={{width: '228px'}}>
+                        <Button variant="text" onClick={() => router.push(Route.HOME)}>
+                            <Image className="w-8 h-auto mr-1" src={Logo} alt="logo"/>
+                            <span className="text-xl">IMX Dashboard</span>
+                        </Button>
+                    </Box>
+                    <Web3Button icon="hide"/>
+                </Grid>
             </Toolbar>
         </Box>
     )

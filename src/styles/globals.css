@@ -29,3 +29,7 @@ a {
 .css-cveggr-MuiListItemIcon-root {
   min-width: 36px !important;
 }
+
+.w3m-overlay {
+  overflow: hidden;
+}
