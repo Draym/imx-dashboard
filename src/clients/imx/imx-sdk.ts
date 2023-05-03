@@ -167,7 +167,9 @@ export class ImxSdk {
     async getPublicKey(): Promise<string> {
         const message = "Please sign this message to load your public key into the DApp."
         const signature = await this.signer.signMessage(message)
-        return ethers.utils.recoverPublicKey(ethers.utils.toUtf8Bytes(message), signature)
+        const msgHash = ethers.utils.hashMessage(message);
+        const msgHashBytes = ethers.utils.arrayify(msgHash);
+        return ethers.utils.recoverPublicKey(msgHashBytes, signature)
     }
 
     async getProjects(useCache = true): Promise<Project[]> {
